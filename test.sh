@@ -13,13 +13,13 @@ then
   exit 1
 fi
 
-pushd backup
-docker build -t digit/s3-backup .
-popd
+cd backup
+docker build -t dogestry.in/digitaloptgroup/s3-backup .
+cd ..
 
-pushd restore
-docker build -t digit/s3-restore .
-popd
+cd restore
+docker build -t dogestry.in/digitaloptgroup/s3-restore .
+cd ..
 
 function cleanup {
   echo "Cleaning up"
@@ -40,13 +40,13 @@ docker run --name s3-backup-test-data-original --volume /var/s3-backup busybox t
 docker run --name s3-backup-test-writer --rm --volumes-from s3-backup-test-data-original busybox sh -c 'echo "test data" > /var/s3-backup/test'
 
 # do a backup
-docker run --rm --name s3-backup-test-backup --volume ~/.boto:/etc/boto.cfg --volumes-from s3-backup-test-data-original digit/s3-backup -s /var/s3-backup -b $BUCKET_NAME -r $REMOTE_PATH
+docker run --rm --name s3-backup-test-backup --volume ~/.boto:/etc/boto.cfg --volumes-from s3-backup-test-data-original dogestry.in/digitaloptgroup/s3-backup -s /var/s3-backup -b $BUCKET_NAME -r $REMOTE_PATH
 
 # create a new data container
 docker run --name s3-backup-test-data-restore --volume /var/s3-backup busybox true
 
 # do a restore
-docker run --rm --name s3-backup-test-store --volume ~/.boto:/etc/boto.cfg --volumes-from s3-backup-test-data-restore digit/s3-restore -t /var/s3-backup -b $BUCKET_NAME -r $REMOTE_PATH
+docker run --rm --name s3-backup-test-store --volume ~/.boto:/etc/boto.cfg --volumes-from s3-backup-test-data-restore dogestry.in/digitaloptgroup/s3-restore -t /var/s3-backup -b $BUCKET_NAME -r $REMOTE_PATH
 
 # check the restore worked
 output=$(docker run --rm --name s3-backup-test-reader --volumes-from s3-backup-test-data-restore busybox sh -c 'cat /var/s3-backup/test')
