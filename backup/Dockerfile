@@ -1,6 +1,7 @@
 FROM gliderlabs/alpine
 
 RUN apk add --update \
+    bash \
     python \
     python-dev \
     py-pip \
