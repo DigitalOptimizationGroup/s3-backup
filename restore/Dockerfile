@@ -1,6 +1,7 @@
-FROM gliderlabs/alpine
+FROM alpine:3.2
 
 RUN apk add --update \
+    ca-certificates \
     bash \
     python \
     python-dev \
@@ -11,7 +12,7 @@ RUN apk add --update \
 
 
 
-
+RUN pip install --upgrade pip
 RUN pip install awscli
 ADD ./s3-restore /usr/local/bin/
 

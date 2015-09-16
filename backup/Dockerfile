@@ -1,6 +1,5 @@
-FROM gliderlabs/alpine
-
 RUN apk add --update \
+    ca-certificates \
     bash \
     python \
     python-dev \
@@ -10,7 +9,7 @@ RUN apk add --update \
   && rm -rf /var/cache/apk/*
 
 
-
+RUN pip install --upgrade pip
 RUN pip install awscli
 ADD ./s3-backup /usr/local/bin/
 
